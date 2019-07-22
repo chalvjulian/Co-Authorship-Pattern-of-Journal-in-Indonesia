@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Co-Authorship Pattern in Journal of Indonesia</title>
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/materialize.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='fonts/material-icons/material-icons.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/gap.css') }}">
+</head>
+<body>
+	<script type="text/javascript" src="{{ url_for('static', filename='js/materialize.min.js') }}"></script>
+	{% include 'navbar.html' %}
+    <!-- <header>
+      <div class="navbar-fixed">
+        <nav>
+          <div class="nav-wrapper light-blue darken-4">
+            <a href="{{ url_for('home') }}">
+              <i class="material-icons left" style="padding-left:10px;">home</i>
+              Co-Authorship Pattern in Journal of Indonesia
+            </a>
+            <ul class="right hide-on-med-and-down">
+                <li>
+                  <a href="{{ url_for('author') }}">Author</a>
+                </li>
+                <li>
+                  <a href="{{ url_for('jurnal') }}">Journal</a>
+                </li>
+                <li>
+                  <a href="{{ url_for('search_affiliation') }}">Affiliate</a>
+                </li>
+            </ul>
+          </div>
+        </nav>
+      </div>
+    </header> -->
+    <br>
+	<div class="container">
+	<form action="{{ url_for('search_affiliation') }}" method="POST">
+	  <div class="form-group">
+	  	<input type="number" name="start_year" placeholder="Awal">
+    	<input type="number" name="end_year" placeholder="Akhir">
+	    <label for="search">Search</label>
+	    <input type="text" class="form-control" placeholder="Masukkan Afiliasi" name="affiliation_name">
+	  </div>
+	  <button type="submit" class="btn btn-primary">Submit</button>
+	</form>
+	<br>
+
+	{% if error %}
+	<div class="alert alert-danger" role="alert">
+		{{ error }}
+	</div>
+	{% endif %}
+
+	{% if rows_aff %}
+	<br>
+	<div class="table-responsive-sm">
+	<table class="table" border="1">
+	<thead class="thead-dark">
+		<tr>
+			<th>Affiliate</th>
+			<th>Tahun</th>
+			<th>Jumlah</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for row in rows_aff %}
+			<tr>
+				<td>{{highlight(affiliation_name,row[0])|safe}}</td>
+				<td>{{row[1]}}</td>
+				<td>{{row[2]}}</td>
+			</tr>
+		{% endfor %}
+	</tbody>
+	</table>
+	</div>
+	<br>
+	{% endif %}
+
+	<script type="text/javascript" src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+	<script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+	</div>
+</body>
+</html>

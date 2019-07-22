@@ -1,0 +1,17 @@
+body {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+  }
+
+  main {
+    flex: 1 0 auto;
+  }
+
+.highlight {
+	background-color: #f0ad4e;
+}
+
+.nav-wrapper a:hover {
+	bakground-color: #ffffff;
+}

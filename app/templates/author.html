@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Co-Authorship Pattern in Journal of Indonesia</title>
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/materialize.min.css') }}">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='fonts/material-icons/material-icons.css') }}">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/gap.css') }}">
+</head>
+<body>
+  <script type="text/javascript" src="{{ url_for('static', filename='js/materialize.min.js') }}"></script>
+  {% include 'navbar.html' %}
+
+  <br>
+  <div class="container"> 
+  <form action="{{ url_for('author') }}" method="POST">
+    <input type="number" name="start_year" placeholder="Awal">
+    <input type="number" name="end_year" placeholder="Akhir">
+    <input type="text" name="search_pattern" placeholder="Nama Penulis">
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+  <br>
+
+  {% if error %}
+    <div class="alert alert-danger" role="alert">
+      {{ error }}
+    </div>
+  {% endif %}
+
+{% if rows %}
+<div class="table-responsive-sm">
+<table class="table" border="1">
+ <thead class="thead-dark">
+ <tr>
+  <th scope="col">Article_id</th>
+  <th scope="col">Tahun</th>
+  <th scope="col">Author</th>
+  <th scope="col">Jurnal</th>
+  <th scope="col">Afiliasi</th>
+ </tr>
+ </thead>
+ <tbody>
+  {% for row in tampil %}
+   <tr>
+    <td>{{row[0]}}</td>
+    <td>{{row[1]}}</td>
+    <td>{{highlight(search_pattern,row[2])|safe}}</td>
+    <td>{{row[3]}}</td>
+    <td>{{row[4]}}</td>
+   </tr>
+  {% endfor %}
+ </tbody>
+</table>
+<br>
+
+  <h5>Tabel Co-Authorship pattern</h5>
+  <table class="table table-bordered" border="1">
+  <tr>
+  {% for col in cols1 %}
+    <th class="thead-dark" scope="col">{{ col }}</th>
+  {% endfor %}
+  </tr>  
+  {% for index, row in rows1 %}
+  <tr>
+      {% for col in cols1 %}
+       <td>{{ row[col] }}</td>
+      {% endfor %}
+  </tr>
+  {% endfor %}
+  </table>
+  <br>
+
+  <h5>Tabel TOP 10 Author</h5>
+  <table class="table table-bordered" border="1">
+  <tr>
+  {% for col in cols2 %}
+    <th scope="col">{{ col }}</th>
+  {% endfor %}
+  </tr>  
+  {% for index, row in rows2 %}
+  <tr>
+      {% for col in cols2 %}
+       <td>{{ row[col] }}</td>
+      {% endfor %}
+  </tr>
+  {% endfor %}
+  </table>
+  </div>
+  {% endif %}
+  
+  </div> 
+</body>
+</html>

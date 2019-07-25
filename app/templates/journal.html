@@ -2,10 +2,17 @@
 <html>
 <head>
 	<title>Co-Authorship Pattern in Journal of Indonesia</title>
+    <meta charset="utf-8">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
 	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
 	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/materialize.min.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='fonts/material-icons/material-icons.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/gap.css') }}">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='fonts/material-icons/material-icons.css') }}">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/gap.css') }}">
+      {% if not error %}
+        {{ js_resources|indent(4)|safe }}
+        {{ css_resources|indent(4)|safe }}
+        {{ plot_script|indent(4)|safe }}
+      {% endif %}
 </head>
 <body>
 	<script type="text/javascript" src="{{ url_for('static', filename='js/materialize.min.js') }}"></script>
@@ -33,19 +40,19 @@
  <thead class="thead-dark">
  <tr>
   <th scope="col">Article_id</th>
-  <th scope="col">Tahun</th>
-  <th scope="col">Author</th>
   <th scope="col">Jurnal</th>
+  <th scope="col">Author</th>
   <th scope="col">Afiliasi</th>
+  <th scope="col">Tahun</th>
  </tr>
  </thead>
  <tbody>
   {% for row in tampil %}
    <tr>
     <td>{{row[0]}}</td>
-    <td>{{row[1]}}</td>
+    <td>{{highlight(search_pattern,row[1])|safe}}</td>
     <td>{{row[2]}}</td>
-    <td>{{highlight(search_pattern,row[3])|safe}}</td>
+    <td>{{row[3]}}</td>
     <td>{{row[4]}}</td>
    </tr>
   {% endfor %}
@@ -67,7 +74,14 @@
       {% endfor %}
   </tr>
   {% endfor %}
+  <tr>
+    <td><b>Total</b></td>
+    <td>{{ sum1 }}</td>
+  </tr>
   </table>
+  
+  <br>
+  {{ plot_div|indent(4)|safe }}
   <br>
 
   <h5>Tabel TOP 10 Journal</h5>

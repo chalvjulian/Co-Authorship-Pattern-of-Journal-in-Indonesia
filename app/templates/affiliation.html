@@ -2,10 +2,17 @@
 <html>
 <head>
 	<title>Co-Authorship Pattern in Journal of Indonesia</title>
+    <meta charset="utf-8">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
 	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
 	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/materialize.min.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='fonts/material-icons/material-icons.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/gap.css') }}">
+      {% if not error %}
+        {{ js_resources|indent(4)|safe }}
+        {{ css_resources|indent(4)|safe }}
+        {{ plot_script|indent(4)|safe }}
+      {% endif %}
 </head>
 <body>
 	<script type="text/javascript" src="{{ url_for('static', filename='js/materialize.min.js') }}"></script>
@@ -58,23 +65,69 @@
 	<table class="table" border="1">
 	<thead class="thead-dark">
 		<tr>
-			<th>Affiliate</th>
-			<th>Tahun</th>
-			<th>Jumlah</th>
+			<th scope="col">Article_id</th>
+	  		<th scope="col">Afiliasi</th>
+  			<th scope="col">Author</th>
+  			<th scope="col">Jurnal</th>
+  			<th scope="col">Tahun</th>
 		</tr>
 	</thead>
 	<tbody>
 		{% for row in rows_aff %}
 			<tr>
-				<td>{{highlight(affiliation_name,row[0])|safe}}</td>
-				<td>{{row[1]}}</td>
-				<td>{{row[2]}}</td>
+				<td>{{row[0]}}</td>
+				<td>{{highlight(affiliation_name,row[1])|safe}}</td>
+ 				<td>{{row[2]}}</td>
+ 				<td>{{row[3]}}</td>
+    			<td>{{row[4]}}</td>
 			</tr>
 		{% endfor %}
 	</tbody>
 	</table>
-	</div>
 	<br>
+
+	<h5>Tabel Co-Authorship pattern</h5>
+  <table class="table table-bordered" border="1">
+  <tr>
+  {% for col in cols1 %}
+    <th class="thead-dark" scope="col">{{ col }}</th>
+  {% endfor %}
+  </tr>  
+  {% for index, row in rows1 %}
+  <tr>
+      {% for col in cols1 %}
+       <td>{{ row[col] }}</td>
+      {% endfor %}
+  </tr>
+  {% endfor %}
+  <tr>
+    <td><b>Total</b></td>
+    <td>{{ sum1 }}</td>
+  </tr>
+  </table>
+  
+
+  <br>
+  {{ plot_div|indent(4)|safe }}
+  <br>
+
+  <h5>Tabel TOP 10 Affiliate</h5>
+  <table class="table table-bordered" border="1">
+  <tr>
+  {% for col in cols2 %}
+    <th scope="col">{{ col }}</th>
+  {% endfor %}
+  </tr>  
+  {% for index, row in rows2 %}
+  <tr>
+      {% for col in cols2 %}
+       <td>{{ row[col] }}</td>
+      {% endfor %}
+  </tr>
+  {% endfor %}
+  </table>
+
+	</div>
 	{% endif %}
 
 	<script type="text/javascript" src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>

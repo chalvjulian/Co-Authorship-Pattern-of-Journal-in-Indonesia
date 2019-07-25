@@ -64,19 +64,12 @@ def jurnal():
 	cur.execute(f'SELECT c_article_id, jurnal, author, affiliate, year from tabel_data WHERE c_article_id in (SELECT c_article_id from tabel_data WHERE year BETWEEN {start_year} and {end_year} and jurnal LIKE "%{search_pattern}%")')
 	rows = cur.fetchall()
 	cur.execute(f'SELECT c_article_id, jurnal, author, affiliate, year from tabel_data WHERE c_article_id in (SELECT c_article_id from tabel_data WHERE year BETWEEN {start_year} and {end_year} and jurnal LIKE "%{search_pattern}%") LIMIT 20')
-	#cur.execute(f'SELECT c_article_id , jurnal, author, affiliate, year FROM tabel_data WHERE year BETWEEN {start_year} and {end_year} and author like "%{search_pattern}%" UNION SELECT tabel_data.c_article_id, tabel_data.jurnal, tabel_data.author, tabel_data.affiliate, tabel_data.year FROM tabel_data, a WHERE tabel_data.year BETWEEN {start_year} and {end_year} and tabel_data.c_article_id = a.c_article_id ORDER BY c_article_id LIMIT 10')
 	tampil = cur.fetchall()
-	print(tampil)
 
 	if not rows:
 			error = "Data tidak ditemukan"
 			return render_template("journal.html", error=error)
 	else:
-
-	#if not rows:
-	#		error = "Data tidak ditemukan"
-	#		return render_template("journal.html", rows=rows, error=error)
-	#else:
 		df = pd.DataFrame()
 
 	if ambil:
@@ -86,7 +79,7 @@ def jurnal():
 
 		df_ambil['c_article_id'] = art_id
 		df_ambil['jurnal'] = jurnal_ambil
-		print(df_ambil)
+		
 
 
 	if rows:
@@ -101,7 +94,6 @@ def jurnal():
 		df['author'] = author
 		df['jurnal'] = jurnal
 		df['affiliate'] = affiliate
-		print(df)
 		df.fillna(0)
 
 		df_cj = pd.DataFrame()
@@ -121,9 +113,6 @@ def jurnal():
 				df_with_percent[str(x) + ' Author atau lebih'] = df_cj[str(x) + ' author']
 				df_with_percent['% ' + str(x) + ' Author atau lebih'] = [str(float(df_cj.iloc[n][str(x) + ' author'])/df_cj.iloc[n]['jumlah paper']*100)[:5] if df_cj.iloc[n]['jumlah paper'] != 0 else str(0.0) for n in range(len(df_cj[str(x) + ' author']))]
 		df_with_percent = df_with_percent[df_with_percent['Tahun'].between(int(start_year), int(end_year), inclusive=True)]
-
-		print(df_with_percent)
-
 
 		author_jumlah = []
 		for x in tqdm(set(list(df_ambil.jurnal))):
@@ -157,7 +146,7 @@ def jurnal():
 		max_y = data_author.values.max() + 50
 		js_resources = INLINE.render_js()
 		css_resources = INLINE.render_css()
-		print(max_y)
+		
 		p = figure(x_range=years, y_range=(0, max_y), plot_height=300, tooltips=TOOLTIPS, title="Grafik Co-Authorship")
 		pos = -0.3
 		i = 0
@@ -201,13 +190,11 @@ def author():
 		start_year = request.form['start_year'] or 1990
 		end_year = request.form['end_year'] or 2015
 
-	#cur.execute(f'SELECT c_article_id, year, author, jurnal, affiliate FROM tabel_data WHERE year between {start_year} and {end_year} or author LIKE "%{search_pattern}%"')
 	cur.execute(f'SELECT c_article_id, year, author, jurnal, affiliate from tabel_data WHERE c_article_id in (SELECT c_article_id from tabel_data WHERE year BETWEEN {start_year} and {end_year} and author LIKE "%{search_pattern}%")')
 	rows = cur.fetchall()
 	cur.execute(f'SELECT c_article_id, year, author, jurnal, affiliate from tabel_data WHERE c_article_id in (SELECT c_article_id from tabel_data WHERE year BETWEEN {start_year} and {end_year} and author LIKE "%{search_pattern}%") LIMIT 20')
-	#cur.execute(f'SELECT c_article_id, year, author, jurnal, affiliate FROM tabel_data WHERE year between {start_year} and {end_year} or author LIKE "%{search_pattern}%" LIMIT 10')
 	tampil = cur.fetchall()
-	print(tampil)
+	
 	if not rows:
 			error = "Data tidak ditemukan"
 			return render_template("author.html", error=error)
@@ -224,7 +211,6 @@ def author():
 			df['year'] = year
 			df['author'] = author
 			df['affiliate'] = affiliate
-			print(df)
 			df.fillna(0)
 
 			df_cj = pd.DataFrame()
@@ -244,8 +230,6 @@ def author():
 					df_with_percent[str(x) + ' Author atau lebih'] = df_cj[str(x) + ' author']
 					df_with_percent['% ' + str(x) + ' Author atau lebih'] = [str(float(df_cj.iloc[n][str(x) + ' author'])/df_cj.iloc[n]['jumlah paper']*100)[:5] if df_cj.iloc[n]['jumlah paper'] != 0 else str(0.0) for n in range(len(df_cj[str(x) + ' author']))]
 			df_with_percent = df_with_percent[df_with_percent['Tahun'].between(int(start_year), int(end_year), inclusive=True)]
-			print(df_with_percent)
-
 
 			author_jumlah = []
 			for x in tqdm(set(list(df.author))):
@@ -280,7 +264,7 @@ def author():
 			max_y = data_author.values.max() + 50
 			js_resources = INLINE.render_js()
 			css_resources = INLINE.render_css()
-			print(max_y)
+			
 			p = figure(x_range=years, y_range=(0, max_y), plot_height=300, tooltips=TOOLTIPS, title="Grafik Co-Authorship")
 			pos = -0.3
 			i = 0
@@ -326,18 +310,10 @@ def search_affiliation():
 		end_year = request.form['end_year'] or 2015
 		affiliation_name = request.form['affiliation_name'] or ""
 
-		#cur.execute(f'SELECT c_article_id, year, author, jurnal, affiliate FROM tabel_data WHERE year between {start_year} and {end_year} and affiliate LIKE "%{affiliation_name}%"')
-		#rows_aff = cur.fetchall()
-		#cur.execute(f'SELECT c_article_id, year, author, jurnal, affiliate from tabel_data WHERE c_article_id in (SELECT c_article_id from tabel_data WHERE year BETWEEN {start_year} and {end_year} and affiliate LIKE "%{affiliation_name}%") LIMIT 10')
-		#cur.execute(f'SELECT c_article_id, year, author, jurnal, affiliate FROM tabel_data WHERE year between {start_year} and {end_year} or author LIKE "%{search_pattern}%" LIMIT 10')
-		#tampil = cur.fetchall()
-		#cur.execute(f'SELECT affiliate, year, count(affiliate) FROM tabel_data WHERE year between {start_year} and {end_year} and affiliate LIKE "%{affiliation_name}%" group by year order by year desc')
-
 	cur.execute(f'SELECT c_article_id, affiliate, author, jurnal, year from tabel_data WHERE c_article_id in (SELECT c_article_id from tabel_data WHERE year BETWEEN {start_year} and {end_year} and affiliate LIKE "%{affiliation_name}%") LIMIT 20')
 	rows_aff = cur.fetchall()
 	cur.execute(f'SELECT c_article_id, affiliate, author, jurnal, year from tabel_data WHERE c_article_id in (SELECT c_article_id from tabel_data WHERE year BETWEEN {start_year} and {end_year} and affiliate LIKE "%{affiliation_name}%")')
 	rows = cur.fetchall()
-
 	
 	if not rows_aff:
 		error = "Data tidak ditemukan"
@@ -356,7 +332,6 @@ def search_affiliation():
 			df['year'] = year
 			df['author'] = author
 			df['affiliate'] = affiliate
-			print(df)
 			df.fillna(0)
 
 			df_cj = pd.DataFrame()
@@ -371,22 +346,11 @@ def search_affiliation():
 
 			for x in range(1, 7):
 				if x != 6:
-
-					#if df_with_percent['Jml_Paper'] == str(0):
-					#	df_with_percent['% ' + str(x) + ' Author'] = [str(0)]
-					#else:
 					df_with_percent[str(x) + ' Author'] = df_cj[str(x) + ' author']
 					df_with_percent['% ' + str(x) + ' Author'] = [str(float(df_cj.iloc[n][str(x) + ' author'])/df_cj.iloc[n]['jumlah paper']*100)[:5] if df_cj.iloc[n]['jumlah paper'] != 0 else str(0.0) for n in range(len(df_cj[str(x) + ' author']))]
-					# df_with_percent['% ' + str(x) + ' Author'] =  df_with_percent['% ' + str(x) + ' Author'].fillna(0)
-					# if math.isnan(df_with_percent['% ' + str(x) + ' Author'].astype(float)):
-					#	df_with_percent['% ' + str(x) + ' Author'] = str(0)
-
 				else:
 					df_with_percent[str(x) + ' Author atau lebih'] = df_cj[str(x) + ' author']
 					df_with_percent['% ' + str(x) + ' Author atau lebih'] = [str(float(df_cj.iloc[n][str(x) + ' author'])/df_cj.iloc[n]['jumlah paper']*100)[:5] if df_cj.iloc[n]['jumlah paper'] != 0 else str(0.0)  for n in range(len(df_cj[str(x) + ' author']))]
-					# df_with_percent['% ' + str(x) + ' Author atau lebih'] = df_with_percent['% ' + str(x) + ' Author atau lebih'].fillna(0)
-					# if math.isnan(df_with_percent['% ' + str(x) + ' Author atau lebih']):
-					#	df_with_percent['% ' + str(x) + ' Author atau lebih'] = str(0)
 			df_with_percent = df_with_percent[df_with_percent['Tahun'].between(int(start_year), int(end_year), inclusive=True)]
 	
 			author_jumlah = []
@@ -422,7 +386,7 @@ def search_affiliation():
 			max_y = data_author.values.max() + 50
 			js_resources = INLINE.render_js()
 			css_resources = INLINE.render_css()
-			print(max_y)
+		
 			p = figure(x_range=years, y_range=(0, max_y), plot_height=300, tooltips=TOOLTIPS, title="Grafik Co-Authorship")
 			pos = -0.3
 			i = 0

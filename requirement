@@ -1,0 +1,13 @@
+Library yang dibutuhkan :
+
+pip install *...*
+
+flask 
+flask_mysqldb
+flask_table
+pandas
+tqdm
+operator
+re
+math
+bokeh

@@ -1,4 +1,4 @@
-1. Impor dbdata.sql ke MySQL
+1. Impor dbdata_rev.sql ke MySQL
 
 2. Install library yang ada pada requirement
 

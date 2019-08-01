@@ -23,7 +23,7 @@ app.config['MYSQL_PASSWORD'] = ''
 app.config['MYSQL_DB'] = 'data'
 mysql = MySQL(app)
 
-awal, akhir = 1990, 2015
+awal, akhir = 1990, 2020
 
 def highlight(pattern, text):
 	search = rf"(?i)(?:{pattern})"
@@ -57,7 +57,7 @@ def jurnal():
 	if request.method == "POST":
 		search_pattern = request.form['search_pattern'] or ""
 		start_year = request.form['start_year'] or 1990
-		end_year = request.form['end_year'] or 2015
+		end_year = request.form['end_year'] or 2020
 
 	cur.execute(f'SELECT c_article_id, jurnal, author, affiliate, year from tabel_data WHERE c_article_id in (SELECT c_article_id from tabel_data WHERE year BETWEEN {start_year} and {end_year} and jurnal LIKE "%{search_pattern}%") group by c_article_id')
 	ambil =  cur.fetchall()
@@ -188,7 +188,7 @@ def author():
 	if request.method == "POST":
 		search_pattern = request.form['search_pattern'] or ""
 		start_year = request.form['start_year'] or 1990
-		end_year = request.form['end_year'] or 2015
+		end_year = request.form['end_year'] or 2020
 
 	cur.execute(f'SELECT c_article_id, year, author, jurnal, affiliate from tabel_data WHERE c_article_id in (SELECT c_article_id from tabel_data WHERE year BETWEEN {start_year} and {end_year} and author LIKE "%{search_pattern}%")')
 	rows = cur.fetchall()
@@ -307,7 +307,7 @@ def search_affiliation():
 	if request.method == "POST":
 		cur = mysql.connection.cursor()
 		start_year = request.form['start_year'] or 1990
-		end_year = request.form['end_year'] or 2015
+		end_year = request.form['end_year'] or 2020
 		affiliation_name = request.form['affiliation_name'] or ""
 
 	cur.execute(f'SELECT c_article_id, affiliate, author, jurnal, year from tabel_data WHERE c_article_id in (SELECT c_article_id from tabel_data WHERE year BETWEEN {start_year} and {end_year} and affiliate LIKE "%{affiliation_name}%") LIMIT 20')
